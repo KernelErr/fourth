@@ -41,7 +41,7 @@ impl Server {
             let default = proxy.default.clone().unwrap_or_else(|| "ban".to_string());
             let upstream = config.upstream.clone();
             let mut upstream_set: HashSet<String> = HashSet::new();
-            for (key, _) in &upstream {
+            for key in upstream.keys() {
                 if key.eq("ban") || key.eq("echo") {
                     continue;
                 }
@@ -200,7 +200,7 @@ where
 {
     match io::copy(reader, writer).await {
         Ok(u64) => {
-            writer.shutdown().await?;
+            let _ = writer.shutdown().await;
             Ok(u64)
         }
         Err(_) => Ok(0),
