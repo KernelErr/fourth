@@ -1,0 +1,24 @@
+[package]
+name = "fourth"
+version = "0.1.0"
+edition = "2018"
+authors = ["LI Rui <lr_cn@outlook.com>"]
+license = "Apache-2.0"
+description = "Simple and fast layer 4 proxy in Rust"
+readme = "README.md"
+homepage = "https://github.com/KernelErr/fourth"
+repository = "https://github.com/KernelErr/fourth"
+keywords = ["proxy", "network"]
+categories = ["web-programming"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4"
+pretty_env_logger = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.8"
+futures = "0.3"
+tls-parser = "0.11"
+
+tokio = { version = "1.0", features = ["full"] }

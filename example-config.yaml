@@ -1,0 +1,22 @@
+version: 1
+log: info
+
+servers:
+  example_server:
+    listen:
+      - "0.0.0.0:443"
+      - "[::]:443"
+    tls: true # Enable TLS features like SNI filtering
+    sni:
+      proxy.example.com: proxy
+      www.example.com: nginx
+    default: ban
+  proxy_server:
+    listen:
+      - "127.0.0.1:8081"
+    default: remote
+
+upstream:
+  nginx: "127.0.0.1:8080"
+  proxy: "127.0.0.1:1024"
+  other: "www.remote.example.com:8082" # proxy to remote address
