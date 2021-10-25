@@ -206,3 +206,30 @@ where
         Err(_) => Ok(0),
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::thread::{self, sleep};
+    use std::time::Duration;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_echo_server() {
+        use crate::config::Config;
+        let config = Config::new("tests/config.yaml").unwrap();
+        let mut server = Server::new(config.base);
+        thread::spawn(move || {
+            let _ = server.run();
+        });
+        sleep(Duration::from_secs(1)); // wait for server to start
+        let mut conn = TcpStream::connect("127.0.0.1:54956").await.unwrap();
+        let mut buf = [0u8; 1];
+        for i in 0..=255u8 {
+            conn.write(&[i]).await.unwrap();
+            conn.read(&mut buf).await.unwrap();
+            assert_eq!(&buf, &[i]);
+        }
+        conn.shutdown().await.unwrap();
+    }
+}

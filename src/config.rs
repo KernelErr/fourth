@@ -54,9 +54,11 @@ fn load_config(path: &str) -> Result<BaseConfig, ConfigError> {
     }
 
     let log_level = parsed.log.clone().unwrap_or_else(|| "info".to_string());
-    std::env::set_var("FOURTH_LOG", log_level.clone());
-    pretty_env_logger::init_custom_env("FOURTH_LOG");
-    debug!("Set log level to {}", log_level);
+    if !log_level.eq("disable") {
+        std::env::set_var("FOURTH_LOG", log_level.clone());
+        pretty_env_logger::init_custom_env("FOURTH_LOG");
+        debug!("Set log level to {}", log_level);
+    }
 
     debug!("Config version {}", parsed.version);
 
@@ -72,5 +74,19 @@ impl From<IOError> for ConfigError {
 impl From<serde_yaml::Error> for ConfigError {
     fn from(err: serde_yaml::Error) -> ConfigError {
         ConfigError::Yaml(err)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_config() {
+        let config = Config::new("tests/config.yaml").unwrap();
+        assert_eq!(config.base.version, 1);
+        assert_eq!(config.base.log.unwrap(), "disable");
+        assert_eq!(config.base.servers.len(), 2);
+        assert_eq!(config.base.upstream.len(), 2);
     }
 }

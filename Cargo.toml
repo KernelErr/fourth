@@ -1,7 +1,7 @@
 [package]
 name = "fourth"
-version = "0.1.0"
-edition = "2018"
+version = "0.1.1"
+edition = "2021"
 authors = ["LI Rui <lr_cn@outlook.com>"]
 license = "Apache-2.0"
 description = "Simple and fast layer 4 proxy in Rust"

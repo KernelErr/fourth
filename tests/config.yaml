@@ -1,0 +1,21 @@
+version: 1
+log: disable
+
+servers:
+  test_server:
+    listen:
+      - "0.0.0.0:21341"
+      - "[::]:21341"
+    tls: true
+    sni:
+      proxy.test.com: proxy
+      www.test.com: web
+    default: ban
+  echo_server:
+    listen:
+      - "0.0.0.0:54956"
+    default: echo
+
+upstream:
+  web: "127.0.0.1:8080"
+  proxy: "www.example.com:1024"
