@@ -2,6 +2,8 @@
 
 > 这一波在第四层。
 
+[![](https://img.shields.io/crates/v/fourth)](https://crates.io/crates/fourth) [![CI](https://img.shields.io/github/workflow/status/kernelerr/fourth/Rust)](https://github.com/KernelErr/fourth/actions/workflows/rust.yml)
+
 [English](/README-EN.md)
 
 Fourth是一个Rust实现的Layer 4代理，用于监听指定端口TCP流量，并根据规则转发到指定目标。
@@ -51,7 +53,7 @@ upstream:
   other: "www.remote.example.com:8082" # 代理到远端地址
 ```
 
-内置两个的upstram：ban（立即中断连接）、echo（返回读到的数据）。
+内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。
 
 ## io_uring?
 
