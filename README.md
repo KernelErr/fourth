@@ -25,6 +25,12 @@ $ cargo build --release
 
 将在`target/release/fourth`生成二进制文件，您也可以使用`cargo install --path . `来安装二进制文件。
 
+或者您也可以使用Cargo直接安装：
+
+```bash
+$ cargo install fourth
+```
+
 ## 配置
 
 Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，如下是一个示例配置。

@@ -23,6 +23,12 @@ $ cargo build --release
 
 Binary file will be generated at `target/release/fourth`, or you can use `cargo install --path .` to install.
 
+Or you can use Cargo to install Fourth:
+
+```bash
+$ cargo install fourth
+```
+
 ## Configuration
 
 Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, here is an example:
