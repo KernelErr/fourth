@@ -62,7 +62,7 @@ servers:
 upstream:
   nginx: "127.0.0.1:8080"
   proxy: "127.0.0.1:1024"
-  other: "www.remote.example.com:8082" # proxy to remote address
+  remote: "www.remote.example.com:8082" # proxy to remote address
 ```
 
 内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。
