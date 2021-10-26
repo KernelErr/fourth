@@ -1,3 +1,4 @@
+use crate::plugins::kcp::{KcpConfig, KcpListener, KcpStream};
 use crate::servers::Proxy;
 use futures::future::try_join;
 use log::{debug, error, warn};
@@ -6,7 +7,6 @@ use std::sync::Arc;
 use tokio::io;
 use tokio::io::{AsyncRead, AsyncWrite, AsyncWriteExt};
 use tokio::net::TcpStream;
-use tokio_kcp::{KcpConfig, KcpListener, KcpStream};
 
 pub async fn proxy(config: Arc<Proxy>) -> Result<(), Box<dyn std::error::Error>> {
     let kcp_config = KcpConfig::default();

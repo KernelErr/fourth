@@ -10,7 +10,7 @@ Fourth is a layer 4 proxy implemented by Rust to listen on specific ports and tr
 
 - Listen on specific port and proxy to local or remote port
 - SNI-based rule without terminating TLS connection
-- Allow TCP inbound
+- Allow KCP inbound(warning: untested)
 
 ## Installation
 
@@ -59,6 +59,10 @@ upstream:
 ```
 
 Built-in two upstreams: ban(terminate connection immediately), echo
+
+## Thanks
+
+- [tokio_kcp](https://github.com/Matrix-Zhang/tokio_kcp)
 
 ## License
 

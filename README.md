@@ -12,7 +12,7 @@ Fourth是一个Rust实现的Layer 4代理，用于监听指定端口TCP/KCP流�
 
 - 监听指定端口代理到本地或远端指定端口
 - 监听指定端口，通过TLS ClientHello消息中的SNI进行分流
-- 支持KCP入站
+- 支持KCP入站（警告：未测试）
 
 ## 安装方法
 
@@ -72,6 +72,10 @@ upstream:
 尽管经过了很多尝试，我们发现目前一些Rust下面的io_uring实现存在问题，我们使用的io_uring库实现尽管在吞吐量上可以做到单线程20Gbps（相比之下Tokio仅有8Gbps），但在QPS上存在性能损失较大的问题。因此在有成熟的io_uring实现之前，我们仍然选择epoll。之后我们会持续关注相关进展。
 
 可能以后会为Linux高内核版本的用户提供可选的io_uring加速。
+
+## 感谢
+
+- [tokio_kcp](https://github.com/Matrix-Zhang/tokio_kcp)
 
 ## 协议
 

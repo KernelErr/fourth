@@ -104,12 +104,12 @@ impl Server {
 
 #[cfg(test)]
 mod test {
+    use crate::plugins::kcp::{KcpConfig, KcpStream};
     use std::net::SocketAddr;
     use std::thread::{self, sleep};
     use std::time::Duration;
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
     use tokio::net::{TcpListener, TcpStream};
-    use tokio_kcp::{KcpConfig, KcpStream};
 
     use super::*;
 

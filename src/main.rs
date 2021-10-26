@@ -1,4 +1,5 @@
 mod config;
+mod plugins;
 mod servers;
 
 use crate::config::Config;

@@ -24,4 +24,7 @@ futures = "0.3"
 tls-parser = "0.11"
 
 tokio = { version = "1.0", features = ["full"] }
-tokio_kcp = { git = "https://github.com/Matrix-Zhang/tokio_kcp", rev="d93a2f2" }
+
+bytes = "1.1"
+kcp = "0.4"
+byte_string = "1"

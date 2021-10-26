@@ -100,14 +100,16 @@ dependencies = [
 name = "fourth"
 version = "0.1.2"
 dependencies = [
+ "byte_string",
+ "bytes 1.1.0",
  "futures",
+ "kcp",
  "log 0.4.14",
  "pretty_env_logger",
  "serde",
  "serde_yaml",
  "tls-parser",
  "tokio",
- "tokio_kcp",
 ]
 
 [[package]]
@@ -762,19 +764,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "tokio_kcp"
-version = "0.8.0"
-source = "git+https://github.com/Matrix-Zhang/tokio_kcp?rev=d93a2f2#d93a2f2ad2cba731dce8490f0960246d2a655033"
-dependencies = [
- "byte_string",
- "bytes 1.1.0",
- "futures",
- "kcp",
- "log 0.4.14",
- "tokio",
 ]
 
 [[package]]
