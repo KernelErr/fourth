@@ -15,7 +15,17 @@ servers:
     listen:
       - "0.0.0.0:54956"
     default: echo
+  tcp_server:
+    listen:
+      - "127.0.0.1:54500"
+    default: tester
+  kcp_server:
+    protocol: kcp
+    listen:
+      - "127.0.0.1:54959"
+    default: echo
 
 upstream:
   web: "127.0.0.1:8080"
   proxy: "www.example.com:1024"
+  tester: "127.0.0.1:54599"

@@ -15,6 +15,11 @@ servers:
     listen:
       - "127.0.0.1:8081"
     default: remote
+  kcp_server:
+    protocol: kcp # default TCP
+    listen:
+      - "127.0.0.1:8082"
+    default: echo
 
 upstream:
   nginx: "127.0.0.1:8080"

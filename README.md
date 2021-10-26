@@ -6,12 +6,13 @@
 
 [English](/README-EN.md)
 
-Fourth是一个Rust实现的Layer 4代理，用于监听指定端口TCP流量，并根据规则转发到指定目标。
+Fourth是一个Rust实现的Layer 4代理，用于监听指定端口TCP/KCP流量，并根据规则转发到指定目标（目前只支持TCP）。
 
 ## 功能
 
 - 监听指定端口代理到本地或远端指定端口
 - 监听指定端口，通过TLS ClientHello消息中的SNI进行分流
+- 支持KCP入站
 
 ## 安装方法
 
@@ -37,20 +38,25 @@ servers:
     listen:
       - "0.0.0.0:443"
       - "[::]:443"
-    tls: true # 启动SNI分流，将根据TLS请求中的主机名分流
+    tls: true # Enable TLS features like SNI filtering
     sni:
       proxy.example.com: proxy
       www.example.com: nginx
     default: ban
-  relay_server:
+  proxy_server:
     listen:
       - "127.0.0.1:8081"
     default: remote
+  kcp_server:
+    protocol: kcp # default TCP
+    listen:
+      - "127.0.0.1:8082"
+    default: echo
 
 upstream:
   nginx: "127.0.0.1:8080"
   proxy: "127.0.0.1:1024"
-  other: "www.remote.example.com:8082" # 代理到远端地址
+  other: "www.remote.example.com:8082" # proxy to remote address
 ```
 
 内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。

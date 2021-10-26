@@ -4,12 +4,13 @@
 
 [![](https://img.shields.io/crates/v/fourth)](https://crates.io/crates/fourth) [![CI](https://img.shields.io/github/workflow/status/kernelerr/fourth/Rust)](https://github.com/KernelErr/fourth/actions/workflows/rust.yml)
 
-Fourth is a layer 4 proxy implemented by Rust to listen on specific ports and transfer data to remote addresses according to configuration.
+Fourth is a layer 4 proxy implemented by Rust to listen on specific ports and transfer TCP/KCP data to remote addresses(only TCP) according to configuration.
 
 ## Features
 
 - Listen on specific port and proxy to local or remote port
 - SNI-based rule without terminating TLS connection
+- Allow TCP inbound
 
 ## Installation
 
