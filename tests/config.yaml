@@ -11,15 +11,20 @@ servers:
       proxy.test.com: proxy
       www.test.com: web
     default: ban
-  echo_server:
-    listen:
-      - "0.0.0.0:54956"
-    default: echo
   tcp_server:
     listen:
       - "127.0.0.1:54500"
     default: tester
+  tcp_echo_server:
+    listen:
+      - "0.0.0.0:54956"
+    default: echo
   kcp_server:
+    protocol: kcp
+    listen:
+      - "127.0.0.1:54958"
+    default: tester
+  kcp_echo_server:
     protocol: kcp
     listen:
       - "127.0.0.1:54959"

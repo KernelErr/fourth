@@ -87,7 +87,7 @@ mod tests {
         let config = Config::new("tests/config.yaml").unwrap();
         assert_eq!(config.base.version, 1);
         assert_eq!(config.base.log.unwrap(), "disable");
-        assert_eq!(config.base.servers.len(), 4);
+        assert_eq!(config.base.servers.len(), 5);
         assert_eq!(config.base.upstream.len(), 3);
     }
 }
