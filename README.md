@@ -6,6 +6,8 @@
 
 [English](/README-EN.md)
 
+**积极开发中，0.1版本迭代可能较快**
+
 Fourth是一个Rust实现的Layer 4代理，用于监听指定端口TCP/KCP流量，并根据规则转发到指定目标（目前只支持TCP）。
 
 ## 功能
