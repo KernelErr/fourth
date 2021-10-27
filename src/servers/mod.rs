@@ -117,16 +117,24 @@ mod test {
     async fn tcp_mock_server() {
         let server_addr: SocketAddr = "127.0.0.1:54599".parse().unwrap();
         let listener = TcpListener::bind(server_addr).await.unwrap();
-        let (mut stream, _) = listener.accept().await.unwrap();
-        let mut buf = [0u8; 1024];
-        let n = stream.read(&mut buf).await.unwrap();
-        if n > 0 {
-            stream.write(b"hello").await.unwrap();
+        loop {
+            let (mut stream, _) = listener.accept().await.unwrap();
+            let mut buf = [0u8; 2];
+            let mut n = stream.read(&mut buf).await.unwrap();
+            while n > 0 {
+                stream.write(b"hello").await.unwrap();
+                if buf.eq(b"by") {
+                    stream.shutdown().await.unwrap();
+                    break;
+                }
+                n = stream.read(&mut buf).await.unwrap();
+            }
+            stream.shutdown().await.unwrap();
         }
     }
 
     #[tokio::test]
-    async fn test_tcp_proxy() {
+    async fn test_proxy() {
         use crate::config::Config;
         let config = Config::new("tests/config.yaml").unwrap();
         let mut server = Server::new(config.base);
@@ -139,15 +147,15 @@ mod test {
         });
         sleep(Duration::from_secs(1)); // wait for server to start
 
-        // // test proxy
-        // let mut conn = TcpStream::connect("127.0.0.1:54500").await.unwrap();
-        // let mut buf = [0u8; 5];
-        // conn.write(b"hi").await.unwrap();
-        // conn.read(&mut buf).await.unwrap();
-        // assert_eq!(&buf, b"hello");
-        // conn.shutdown().await.unwrap();
+        // test TCP proxy
+        let mut conn = TcpStream::connect("127.0.0.1:54500").await.unwrap();
+        let mut buf = [0u8; 5];
+        conn.write(b"hi").await.unwrap();
+        conn.read(&mut buf).await.unwrap();
+        assert_eq!(&buf, b"hello");
+        conn.shutdown().await.unwrap();
 
-        // test echo
+        // test TCP echo
         let mut conn = TcpStream::connect("127.0.0.1:54956").await.unwrap();
         let mut buf = [0u8; 1];
         for i in 0..=10u8 {
@@ -156,28 +164,8 @@ mod test {
             assert_eq!(&buf, &[i]);
         }
         conn.shutdown().await.unwrap();
-    }
 
-    #[tokio::test]
-    async fn test_kcp_proxy() {
-        use crate::config::Config;
-        let config = Config::new("tests/config.yaml").unwrap();
-        let mut server = Server::new(config.base);
-        thread::spawn(move || {
-            let _ = server.run();
-        });
-        sleep(Duration::from_secs(1)); // wait for server to start
-
-        // test proxy
-        let kcp_config = KcpConfig::default();
-        let server_addr: SocketAddr = "127.0.0.1:54958".parse().unwrap();
-        let mut conn = KcpStream::connect(&kcp_config, server_addr).await.unwrap();
-        let mut buf = [0u8; 5];
-        conn.write(b"hi").await.unwrap();
-        conn.read(&mut buf).await.unwrap();
-        assert_eq!(&buf, b"hello");
-
-        // test echo
+        // test KCP echo
         let kcp_config = KcpConfig::default();
         let server_addr: SocketAddr = "127.0.0.1:54959".parse().unwrap();
         let mut conn = KcpStream::connect(&kcp_config, server_addr).await.unwrap();
@@ -187,6 +175,16 @@ mod test {
             conn.read(&mut buf).await.unwrap();
             assert_eq!(&buf, &[i]);
         }
+        conn.shutdown().await.unwrap();
+
+        // test KCP proxy and close mock server
+        let kcp_config = KcpConfig::default();
+        let server_addr: SocketAddr = "127.0.0.1:54958".parse().unwrap();
+        let mut conn = KcpStream::connect(&kcp_config, server_addr).await.unwrap();
+        let mut buf = [0u8; 5];
+        conn.write(b"by").await.unwrap();
+        conn.read(&mut buf).await.unwrap();
+        assert_eq!(&buf, b"hello");
         conn.shutdown().await.unwrap();
     }
 }
