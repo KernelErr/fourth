@@ -22,6 +22,6 @@ servers:
     default: echo
 
 upstream:
-  nginx: "127.0.0.1:8080"
-  proxy: "127.0.0.1:1024"
-  remote: "www.remote.example.com:8082" # proxy to remote address
+  nginx: "tcp://127.0.0.1:8080"
+  proxy: "tcp://127.0.0.1:1024"
+  remote: "tcp://www.remote.example.com:8082" # proxy to remote address

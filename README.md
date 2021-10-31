@@ -35,39 +35,31 @@ $ cargo install fourth
 
 ## 配置
 
-Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，如下是一个示例配置。
+Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，如下是一个最小有效配置：
 
 ```yaml
 version: 1
 log: info
 
 servers:
-  example_server:
-    listen:
-      - "0.0.0.0:443"
-      - "[::]:443"
-    tls: true # Enable TLS features like SNI filtering
-    sni:
-      proxy.example.com: proxy
-      www.example.com: nginx
-    default: ban
   proxy_server:
     listen:
       - "127.0.0.1:8081"
     default: remote
-  kcp_server:
-    protocol: kcp # default TCP
-    listen:
-      - "127.0.0.1:8082"
-    default: echo
 
 upstream:
-  nginx: "127.0.0.1:8080"
-  proxy: "127.0.0.1:1024"
-  remote: "www.remote.example.com:8082" # proxy to remote address
+  remote: "tcp://www.remote.example.com:8082" # proxy to remote address
 ```
 
-内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。
+内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。更详细的配置可以参考[示例配置](./example-config.yaml)。
+
+## 性能测试
+
+在4C2G的服务器上测试：
+
+使用Fourth代理到Nginx（直连QPS 120000）: ~70000req/s （测试命令：`wrk -t200 -c1000 -d120s --latency http://proxy-server:8081 `）
+
+使用Fourth代理到本地iperf3：8Gbps
 
 ## io_uring?
 

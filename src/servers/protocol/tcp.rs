@@ -1,3 +1,4 @@
+use crate::config::Upstream;
 use crate::servers::protocol::tls::get_sni;
 use crate::servers::Proxy;
 use futures::future::try_join;
@@ -71,37 +72,41 @@ async fn accept(inbound: TcpStream, proxy: Arc<Proxy>) -> Result<(), Box<dyn std
                 "No upstream named {:?} on server {:?}",
                 proxy.default, proxy.name
             );
-            return process(inbound, &proxy.default).await;
+            return process(inbound, proxy.upstream.get(&proxy.default).unwrap()).await; // ToDo: Remove unwrap and check default option
         }
     };
     return process(inbound, upstream).await;
 }
 
-async fn process(mut inbound: TcpStream, upstream: &str) -> Result<(), Box<dyn std::error::Error>> {
-    if upstream == "ban" {
-        let _ = inbound.shutdown();
-        return Ok(());
-    } else if upstream == "echo" {
-        let (mut ri, mut wi) = io::split(inbound);
-        let inbound_to_inbound = copy(&mut ri, &mut wi);
-        let bytes_tx = inbound_to_inbound.await;
-        debug!("Bytes read: {:?}", bytes_tx);
-        return Ok(());
+async fn process(mut inbound: TcpStream, upstream: &Upstream) -> Result<(), Box<dyn std::error::Error>> {
+    match upstream {
+        Upstream::Ban => {
+            let _ = inbound.shutdown();
+            Ok(())
+        }
+        Upstream::Echo => {
+            let (mut ri, mut wi) = io::split(inbound);
+            let inbound_to_inbound = copy(&mut ri, &mut wi);
+            let bytes_tx = inbound_to_inbound.await;
+            debug!("Bytes read: {:?}", bytes_tx);
+            Ok(())
+        }
+        Upstream::Custom(custom) => {
+            let outbound = TcpStream::connect(custom.addr.clone()).await?;
+
+            let (mut ri, mut wi) = io::split(inbound);
+            let (mut ro, mut wo) = io::split(outbound);
+
+            let inbound_to_outbound = copy(&mut ri, &mut wo);
+            let outbound_to_inbound = copy(&mut ro, &mut wi);
+
+            let (bytes_tx, bytes_rx) = try_join(inbound_to_outbound, outbound_to_inbound).await?;
+
+            debug!("Bytes read: {:?} write: {:?}", bytes_tx, bytes_rx);
+
+            Ok(())
+        }
     }
-
-    let outbound = TcpStream::connect(upstream).await?;
-
-    let (mut ri, mut wi) = io::split(inbound);
-    let (mut ro, mut wo) = io::split(outbound);
-
-    let inbound_to_outbound = copy(&mut ri, &mut wo);
-    let outbound_to_inbound = copy(&mut ro, &mut wi);
-
-    let (bytes_tx, bytes_rx) = try_join(inbound_to_outbound, outbound_to_inbound).await?;
-
-    debug!("Bytes read: {:?} write: {:?}", bytes_tx, bytes_rx);
-
-    Ok(())
 }
 
 async fn copy<'a, R, W>(reader: &'a mut R, writer: &'a mut W) -> io::Result<u64>

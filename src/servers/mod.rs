@@ -5,13 +5,13 @@ use std::sync::Arc;
 use tokio::task::JoinHandle;
 
 mod protocol;
-use crate::config::BaseConfig;
+use crate::config::{ParsedConfig, Upstream};
 use protocol::{kcp, tcp};
 
 #[derive(Debug)]
 pub struct Server {
     pub proxies: Vec<Arc<Proxy>>,
-    pub config: BaseConfig,
+    pub config: ParsedConfig,
 }
 
 #[derive(Debug, Clone)]
@@ -22,11 +22,11 @@ pub struct Proxy {
     pub tls: bool,
     pub sni: Option<HashMap<String, String>>,
     pub default: String,
-    pub upstream: HashMap<String, String>,
+    pub upstream: HashMap<String, Upstream>,
 }
 
 impl Server {
-    pub fn new(config: BaseConfig) -> Self {
+    pub fn new(config: ParsedConfig) -> Self {
         let mut new_server = Server {
             proxies: Vec::new(),
             config: config.clone(),
@@ -53,6 +53,7 @@ impl Server {
                         continue;
                     }
                 };
+
                 let proxy = Proxy {
                     name: name.clone(),
                     listen: listen_addr,
@@ -103,7 +104,7 @@ impl Server {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::plugins::kcp::{KcpConfig, KcpStream};
     use std::net::SocketAddr;
     use std::thread::{self, sleep};

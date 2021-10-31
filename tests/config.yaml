@@ -31,6 +31,6 @@ servers:
     default: echo
 
 upstream:
-  web: "127.0.0.1:8080"
-  proxy: "www.example.com:1024"
-  tester: "127.0.0.1:54599"
+  web: "tcp://127.0.0.1:8080"
+  proxy: "tcp://www.example.com:1024"
+  tester: "tcp://127.0.0.1:54599"
