@@ -74,26 +74,25 @@ async fn process(
             let bytes_tx = inbound_to_inbound.await;
             debug!("Bytes read: {:?}", bytes_tx);
         }
-        Upstream::Custom(custom) => {
-            match custom.protocol.as_ref() {
-                "tcp" => {
-                    let outbound = TcpStream::connect(custom.addr.clone()).await?;
+        Upstream::Custom(custom) => match custom.protocol.as_ref() {
+            "tcp" => {
+                let outbound = TcpStream::connect(custom.addr.clone()).await?;
 
-                    let (mut ri, mut wi) = io::split(inbound);
-                    let (mut ro, mut wo) = io::split(outbound);
+                let (mut ri, mut wi) = io::split(inbound);
+                let (mut ro, mut wo) = io::split(outbound);
 
-                    let inbound_to_outbound = copy(&mut ri, &mut wo);
-                    let outbound_to_inbound = copy(&mut ro, &mut wi);
+                let inbound_to_outbound = copy(&mut ri, &mut wo);
+                let outbound_to_inbound = copy(&mut ro, &mut wi);
 
-                    let (bytes_tx, bytes_rx) = try_join(inbound_to_outbound, outbound_to_inbound).await?;
+                let (bytes_tx, bytes_rx) =
+                    try_join(inbound_to_outbound, outbound_to_inbound).await?;
 
-                    debug!("Bytes read: {:?} write: {:?}", bytes_tx, bytes_rx);
-                }
-                _ => {
-                    error!("Reached unknown protocol: {:?}", custom.protocol);
-                }
+                debug!("Bytes read: {:?} write: {:?}", bytes_tx, bytes_rx);
             }
-        }
+            _ => {
+                error!("Reached unknown protocol: {:?}", custom.protocol);
+            }
+        },
     };
     Ok(())
 }

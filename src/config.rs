@@ -192,10 +192,7 @@ fn verify_config(config: ParsedConfig) -> Result<ParsedConfig, ConfigError> {
 
         for key in &used_upstreams {
             if !config.upstream.contains_key(key) {
-                return Err(ConfigError::Custom(format!(
-                    "Upstream {} not found",
-                    key
-                )));
+                return Err(ConfigError::Custom(format!("Upstream {} not found", key)));
             }
         }
     }

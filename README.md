@@ -33,6 +33,8 @@ $ cargo build --release
 $ cargo install fourth
 ```
 
+或者您也可以直接从Release中下载二进制文件。
+
 ## 配置
 
 Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，如下是一个最小有效配置：

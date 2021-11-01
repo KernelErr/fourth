@@ -31,6 +31,8 @@ Or you can use Cargo to install Fourth:
 $ cargo install fourth
 ```
 
+Or you can download binary file form the Release page.
+
 ## Configuration
 
 Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, here is an minimal viable example:
