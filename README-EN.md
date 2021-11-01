@@ -33,34 +33,31 @@ $ cargo install fourth
 
 ## Configuration
 
-Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, here is an example:
+Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, here is an minimal viable example:
 
 ```yaml
 version: 1
 log: info
 
 servers:
-  example_server:
-    listen:
-      - "0.0.0.0:443"
-      - "[::]:443"
-    tls: true # Enable TLS features like SNI
-    sni:
-      proxy.example.com: proxy
-      www.example.com: nginx
-    default: ban
-  relay_server:
+  proxy_server:
     listen:
       - "127.0.0.1:8081"
     default: remote
 
 upstream:
-  nginx: "127.0.0.1:8080"
-  proxy: "127.0.0.1:1024"
-  remote: "www.remote.example.com:8082" # proxy to remote address
+  remote: "tcp://www.remote.example.com:8082" # proxy to remote address
 ```
 
-Built-in two upstreams: ban(terminate connection immediately), echo
+Built-in two upstreams: ban(terminate connection immediately), echo. For detailed configuration, check [this example](./example-config.yaml).
+
+## Performance Benchmark
+
+Tested on 4C2G server:
+
+Use fourth to proxy to Nginx(QPS of direct connection: ~120000): ~70000 req/s (Command: `wrk -t200 -c1000 -d120s --latency http://proxy-server:8081`)
+
+Use fourth to proxy to local iperf3: 8Gbps
 
 ## Thanks
 
