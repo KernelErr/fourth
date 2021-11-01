@@ -53,13 +53,17 @@ async fn accept(
                 "No upstream named {:?} on server {:?}",
                 proxy.default, proxy.name
             );
-            return process(inbound, proxy.upstream.get(&proxy.default).unwrap()).await; // ToDo: Remove unwrap and check default option
+            return process(inbound, proxy.upstream.get(&proxy.default).unwrap()).await;
+            // ToDo: Remove unwrap and check default option
         }
     };
     return process(inbound, upstream).await;
 }
 
-async fn process(mut inbound: KcpStream, upstream: &Upstream) -> Result<(), Box<dyn std::error::Error>> {
+async fn process(
+    mut inbound: KcpStream,
+    upstream: &Upstream,
+) -> Result<(), Box<dyn std::error::Error>> {
     match upstream {
         Upstream::Ban => {
             let _ = inbound.shutdown();
