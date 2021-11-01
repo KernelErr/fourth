@@ -37,7 +37,7 @@ $ cargo install fourth
 
 ## 配置
 
-Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，如下是一个最小有效配置：
+Fourth使用yaml格式的配置文件，默认情况下会读取`/etc/fourth/config.yaml`，您也可以设置自定义路径到环境变量`FOURTH_CONFIG`，如下是一个最小有效配置：
 
 ```yaml
 version: 1

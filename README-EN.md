@@ -35,7 +35,7 @@ Or you can download binary file form the Release page.
 
 ## Configuration
 
-Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, here is an minimal viable example:
+Fourth will read yaml format configuration file from `/etc/fourth/config.yaml`, and you can set custom path to environment variable `FOURTH_CONFIG`, here is an minimal viable example:
 
 ```yaml
 version: 1
