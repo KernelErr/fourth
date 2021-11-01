@@ -89,7 +89,9 @@ async fn process(
 
                     debug!("Bytes read: {:?} write: {:?}", bytes_tx, bytes_rx);
                 }
-                _ => {}
+                _ => {
+                    error!("Reached unknown protocol: {:?}", custom.protocol);
+                }
             }
         }
     };
