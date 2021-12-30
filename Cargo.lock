@@ -108,7 +108,7 @@ dependencies = [
 
 [[package]]
 name = "fourth"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "byte_string",
  "bytes 1.1.0",

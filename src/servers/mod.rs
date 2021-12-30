@@ -83,10 +83,16 @@ impl Server {
             let handle = tokio::spawn(async move {
                 match config.protocol.as_ref() {
                     "tcp" => {
-                        let _ = tcp::proxy(config).await;
+                        let res = tcp::proxy(config.clone()).await;
+                        if res.is_err() {
+                            error!("Failed to start {}: {}", config.name, res.err().unwrap());
+                        }
                     }
                     "kcp" => {
-                        let _ = kcp::proxy(config).await;
+                        let res = kcp::proxy(config.clone()).await;
+                        if res.is_err() {
+                            error!("Failed to start {}: {}", config.name, res.err().unwrap());
+                        }
                     }
                     _ => {
                         error!("Invalid protocol: {}", config.protocol)

@@ -55,6 +55,8 @@ upstream:
 
 内置两个的upstream：ban（立即中断连接）、echo（返回读到的数据）。更详细的配置可以参考[示例配置](./example-config.yaml)。
 
+注意：[::]会默认同时绑定IPv4和IPv6。
+
 ## 性能测试
 
 在4C2G的服务器上测试：

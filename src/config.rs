@@ -198,7 +198,7 @@ fn verify_config(config: ParsedConfig) -> Result<ParsedConfig, ConfigError> {
     }
 
     for key in &upstream_names {
-        if !used_upstreams.contains(key) {
+        if !used_upstreams.contains(key) && !key.eq("echo") && !key.eq("ban") {
             warn!("Upstream {} not used", key);
         }
     }
